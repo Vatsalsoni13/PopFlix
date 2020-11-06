@@ -1,5 +1,5 @@
-const query = require('../util/db').query();
-const connection = require('../util/db').connection();
+const query = require("../util/db").query();
+const connection = require("../util/db").connection();
 
 exports.getBookFlix = async (req, res, next) => {
   try {
@@ -14,14 +14,14 @@ exports.getBookFlix = async (req, res, next) => {
     }
 
     let dropRegions = await query(`SELECT Location FROM theater;`);
-    return res.render('Bookings/flix', {
-      pg: 'book_flix',
+    return res.render("Bookings/flix", {
+      pg: "book_flix",
       user: req.user,
       theaters: theaters,
       dropRegions: dropRegions,
     });
   } catch (err) {
-    console.log('Error', err);
+    console.log("Error", err);
     /*TODO Error pg */
   }
 };
@@ -33,11 +33,11 @@ exports.searchFlix = async (req, res) => {
     let dropRegions = await query(`SELECT Location FROM theater;`);
 
     let theaters = {};
-    if (req.body.region == 'Region') {
+    if (req.body.region == "Region") {
       theaters = await query(
         `SELECT * FROM theater WHERE name LIKE '%${theaterName}%';`
       );
-    } else if (req.body.searchmovie == '') {
+    } else if (req.body.searchmovie == "") {
       theaters = await query(
         `SELECT * FROM theater AS t WHERE location='${theaterLocation}'  ORDER BY t.rating;`
       );
@@ -55,8 +55,8 @@ exports.searchFlix = async (req, res) => {
       indx = indx + 1;
     }
 
-    return res.render('Bookings/flix', {
-      pg: 'book_flix',
+    return res.render("Bookings/flix", {
+      pg: "book_flix",
       user: req.user,
       theaters: theaters,
       dropRegions: dropRegions,
@@ -69,13 +69,13 @@ exports.searchFlix = async (req, res) => {
 const filterMovieData = (movies) => {
   let indx = 0;
   while (indx < movies.length) {
-    let ar = movies[indx].release_date.toString().split(' ');
-    let r_date = ar[0] + ' ' + ar[1] + ' ' + ar[2] + ' ' + ar[3];
+    let ar = movies[indx].release_date.toString().split(" ");
+    let r_date = ar[0] + " " + ar[1] + " " + ar[2] + " " + ar[3];
     movies[indx].release_date = r_date;
     let x = movies[indx].language;
-    let y = 'Marathi';
-    if (x == 'EN') y = 'English';
-    else if (x == 'Hi') y = 'Hindi';
+    let y = "Marathi";
+    if (x == "EN") y = "English";
+    else if (x == "Hi") y = "Hindi";
     movies[indx].language = y;
     indx = indx + 1;
   }
@@ -101,14 +101,14 @@ exports.getMovieFlix = async (req, res) => {
     let indx = 0;
     while (indx < dropLanguage.length) {
       let x = dropLanguage[indx].LANGUAGE;
-      if (x == 'EN') dropLanguage[indx].LANGUAGE = 'English';
-      else if (x == 'Hi') dropLanguage[indx].LANGUAGE = 'Hindi';
-      else dropLanguage[indx].LANGUAGE = 'Marathi';
+      if (x == "EN") dropLanguage[indx].LANGUAGE = "English";
+      else if (x == "Hi") dropLanguage[indx].LANGUAGE = "Hindi";
+      else dropLanguage[indx].LANGUAGE = "Marathi";
       indx = indx + 1;
     }
 
-    res.render('Bookings/movie', {
-      pg: 'book_movie',
+    res.render("Bookings/movie", {
+      pg: "book_movie",
       user: req.user,
       movies: mov,
       dropLanguage: dropLanguage,
@@ -130,48 +130,48 @@ exports.searchMovie = async (req, res) => {
     let indx = 0;
     while (indx < dropLanguage.length) {
       let x = dropLanguage[indx].LANGUAGE;
-      if (x == 'EN') dropLanguage[indx].LANGUAGE = 'English';
-      else if (x == 'Hi') dropLanguage[indx].LANGUAGE = 'Hindi';
-      else dropLanguage[indx].LANGUAGE = 'Marathi';
+      if (x == "EN") dropLanguage[indx].LANGUAGE = "English";
+      else if (x == "Hi") dropLanguage[indx].LANGUAGE = "Hindi";
+      else dropLanguage[indx].LANGUAGE = "Marathi";
       indx = indx + 1;
     }
 
     let mov = {};
-    if (language == 'Language' && genre == 'Genre') {
+    if (language == "Language" && genre == "Genre") {
       mov = await query(
         `SELECT * FROM movies WHERE name LIKE '%${movieName}%';`
       );
-    } else if (movieName == '' && genre == 'Genre') {
-      if (language == 'English') language = 'EN';
-      else if (language == 'Hindi') language = 'Hi';
-      else language = 'Ma';
+    } else if (movieName == "" && genre == "Genre") {
+      if (language == "English") language = "EN";
+      else if (language == "Hindi") language = "Hi";
+      else language = "Ma";
       mov = await query(`SELECT * FROM movies WHERE language='${language}';`);
-    } else if (movieName == '' && language == 'Language') {
+    } else if (movieName == "" && language == "Language") {
       mov = await query(
         `SELECT * FROM movies AS m WHERE m.m_id IN (SELECT m_id from genre where genre='${genre}');`
       );
-    } else if (genre == 'Genre') {
-      if (language == 'English') language = 'EN';
-      else if (language == 'Hindi') language = 'Hi';
-      else language = 'Ma';
+    } else if (genre == "Genre") {
+      if (language == "English") language = "EN";
+      else if (language == "Hindi") language = "Hi";
+      else language = "Ma";
       mov = await query(
         `SELECT * FROM movies WHERE name LIKE '%${movieName}%' AND language='${language}';`
       );
-    } else if (movieName == '') {
-      if (language == 'English') language = 'EN';
-      else if (language == 'Hindi') language = 'Hi';
-      else language = 'Ma';
+    } else if (movieName == "") {
+      if (language == "English") language = "EN";
+      else if (language == "Hindi") language = "Hi";
+      else language = "Ma";
       mov = await query(
         `SELECT * FROM movies AS m WHERE m.language='${language}' AND m.m_id IN (SELECT m_id from genre where genre='${genre}');`
       );
-    } else if (language == 'Language') {
+    } else if (language == "Language") {
       mov = await query(
         `SELECT * FROM movies AS m WHERE m.name LIKE '%${movieName}%' AND m.m_id IN (SELECT m_id from genre where genre='${genre}');`
       );
     } else {
-      if (language == 'English') language = 'EN';
-      else if (language == 'Hindi') language = 'Hi';
-      else language = 'Ma';
+      if (language == "English") language = "EN";
+      else if (language == "Hindi") language = "Hi";
+      else language = "Ma";
       mov = await query(
         `SELECT * FROM movies AS m WHERE m.name LIKE '%${movieName}%' AND m.language='${language}' AND m.m_id IN (SELECT m_id from genre where genre='${genre}');`
       );
@@ -185,8 +185,8 @@ exports.searchMovie = async (req, res) => {
       mov[x].actors = actors;
     }
 
-    res.render('Bookings/movie', {
-      pg: 'book_movie',
+    res.render("Bookings/movie", {
+      pg: "book_movie",
       user: req.user,
       movies: mov,
       dropLanguage: dropLanguage,
@@ -217,9 +217,9 @@ exports.getSelectFlix = async (req, res) => {
       theater[indx].movies = movies;
       indx = indx + 1;
     }
-    res.render('Bookings/select_flix', {
+    res.render("Bookings/select_flix", {
       user: req.user,
-      pg: 'select_flix',
+      pg: "select_flix",
       theater: theater,
       movieId: id,
     });
@@ -246,9 +246,9 @@ exports.getSelectSeat = async (req, res) => {
   booked = booked.map((a) => {
     return a.seat_id - seats[0].s_id + 1;
   });
-  res.render('Bookings/seat', {
+  res.render("Bookings/seat", {
     user: req.user,
-    pg: 'select_seat',
+    pg: "select_seat",
     base_id: seats[0].s_id,
     base_cost: base_cost[0].cost,
     seats: JSON.stringify(seats),
@@ -271,8 +271,8 @@ exports.getSelectMovie = async (req, res) => {
       );
       mov[x].actors = actors;
     }
-    res.render('Bookings/select_movie', {
-      pg: 'select_movie',
+    res.render("Bookings/select_movie", {
+      pg: "select_movie",
       user: req.user,
       movies: mov,
       theaterId: id,
@@ -289,9 +289,9 @@ exports.getSelectTime = async (req, res) => {
     let shows = await query(
       `select * from shows where t_id=${t_id} and m_id=${m_id};`
     );
-    res.render('Bookings/select_time', {
+    res.render("Bookings/select_time", {
       user: req.user,
-      pg: 'select_time',
+      pg: "select_time",
       shows: shows,
     });
   } catch (error) {
@@ -300,7 +300,7 @@ exports.getSelectTime = async (req, res) => {
 };
 exports.getConfirmPayment = async (req, res) => {
   let { date, flix_id, show_id, seat_id } = req.body;
-
+  console.log(flix_id);
   try {
     // get cost
     let res1 = await query(`select SUM(price+(case when weekday(${date}) in (5,6) then weekend_price else 0 end)+seat_price) as cost
@@ -309,7 +309,7 @@ exports.getConfirmPayment = async (req, res) => {
 
     let cost = res1[0].cost;
 
-    res1 = await query('lock tables ticket write,payment write,booking write;');
+    res1 = await query("lock tables ticket write,payment write,booking write;");
     connection.beginTransaction();
     res1 = await query(
       `select * from ticket Inner join booking on payment_id=payment where show_id=${show_id} and seat_id in (${seat_id})  and dt=${date};`
@@ -318,11 +318,11 @@ exports.getConfirmPayment = async (req, res) => {
     // Some of selected seats are already booked
     if (res1.length !== 0) {
       connection.rollback();
-      await query('unlock tables;');
-      res.render('Error/error', {
-        pg: 'error',
+      await query("unlock tables;");
+      res.render("Error/error", {
+        pg: "error",
         user: req.user,
-        error: 'Selected seats are already booked',
+        error: "Selected seats are already booked",
       });
       return;
     }
@@ -335,7 +335,7 @@ exports.getConfirmPayment = async (req, res) => {
     let payment_id = res1.insertId;
 
     // add booking
-    let temp = seat_id.split(',');
+    let temp = seat_id.split(",");
 
     for (t in temp) {
       res1 = await query(
@@ -349,7 +349,7 @@ exports.getConfirmPayment = async (req, res) => {
     );
 
     connection.commit();
-    await query('unlock tables;');
+    await query("unlock tables;");
 
     res1 = await query(`select slot from shows where show_id=${show_id};`);
     const slot = res1[0].slot;
@@ -362,19 +362,19 @@ exports.getConfirmPayment = async (req, res) => {
     const base_id = res1[0].s_id;
     res1 = await query(`select name from movies where m_id=${flix_id};`);
     const movie = res1[0].name;
-    res.render('Bookings/confirm_payment', {
+    res.render("Bookings/confirm_payment", {
       user: req.user,
-      pg: 'confirm_payment',
+      pg: "confirm_payment",
       movie: movie,
       seats: seat_id
-        .split(',')
+        .split(",")
         .map((id) => {
           return Number(id);
         })
         .map((id) => {
           return id - base_id + 1;
         })
-        .join(','),
+        .join(","),
       theater: theater,
       slot: slot,
       date: date,
@@ -382,12 +382,12 @@ exports.getConfirmPayment = async (req, res) => {
   } catch (e) {
     console.log(e);
     connection.rollback();
-    await query('unlock tables;');
+    await query("unlock tables;");
 
-    res.render('Error/error', {
-      pg: 'error',
+    res.render("Error/error", {
+      pg: "error",
       user: req.user,
-      error: 'Some Error Occured',
+      error: "Some Error Occured",
     });
   }
 };
