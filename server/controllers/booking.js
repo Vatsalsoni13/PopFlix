@@ -54,7 +54,8 @@ exports.searchFlix = async (req, res) => {
       theaters[indx].movies = movies;
       indx = indx + 1;
     }
-
+    // theaters = JSON.stringify({ theaters });
+    // console.log(theaters);
     return res.render("Bookings/flix", {
       pg: "book_flix",
       user: req.user,
@@ -63,6 +64,11 @@ exports.searchFlix = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.render("Error/error", {
+      pg: "error",
+      user: req.user,
+      error: "No movies available or error occured!",
+    });
   }
 };
 
@@ -116,7 +122,11 @@ exports.getMovieFlix = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    /*TODO Error pg */
+    res.render("Error/error", {
+      pg: "error",
+      user: req.user,
+      error: "Error occured!",
+    });
   }
 };
 
@@ -194,6 +204,11 @@ exports.searchMovie = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.render("Error/error", {
+      pg: "error",
+      user: req.user,
+      error: "No movies available or error occured!",
+    });
   }
 };
 
@@ -279,6 +294,11 @@ exports.getSelectMovie = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.render("Error/error", {
+      pg: "error",
+      user: req.user,
+      error: "Error occured!",
+    });
   }
 };
 exports.getSelectTime = async (req, res) => {
@@ -360,7 +380,9 @@ exports.getConfirmPayment = async (req, res) => {
       `select s_id from seats where theater_id=${flix_id} order by s_id limit 1;`
     );
     const base_id = res1[0].s_id;
-    res1 = await query(`select name from movies where m_id=(Select m_id from shows where show_id=${show_id});`);
+    res1 = await query(
+      `select name from movies where m_id=(Select m_id from shows where show_id=${show_id});`
+    );
     const movie = res1[0].name;
     res.render("Bookings/confirm_payment", {
       user: req.user,
