@@ -207,7 +207,7 @@ exports.searchMovie = async (req, res) => {
     res.render("Error/error", {
       pg: "error",
       user: req.user,
-      error: "No movies available or error occured!",
+      error: "No flix available or error occured!",
     });
   }
 };
